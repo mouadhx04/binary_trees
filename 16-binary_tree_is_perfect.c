@@ -1,85 +1,45 @@
 #include "binary_trees.h"
 
 /**
- * height - height of a binary tree.
- *
- * @tree: pointer to root.
- *
- * Return: height.
+ * binary_tree_height - measure the height of a binary tree
+ * @tree: a pointer to the root node of the tree to traverse
+ * Return: the height of a binary tree
  */
 
-int height(const binary_tree_t *tree)
+size_t binary_tree_height(const binary_tree_t *tree)
 {
-	int left = 0, right = 0;
+	size_t h_left, h_right;
 
-	if (!tree)
+	if (tree == NULL)
 		return (0);
 
-	left = height(tree->left);
-	right = height(tree->right);
-	if (left > right)
-		return (left + 1);
-	return (right + 1);
-}
-/**
- * balanced - balance factor of a tree.
- *
- * @tree: pointer to root node
- *
- * Return: balance factor.
- */
-
-int balanced(const binary_tree_t *tree)
-{
-	int balance = 0;
-
-	if (!tree)
-		return (0);
-
-	balance = height(tree->left) - height(tree->right);
-	return (balance);
+	h_left = binary_tree_height(tree->left);
+	h_right = binary_tree_height(tree->right);
+	if (h_left >= h_right)
+		return (h_left + 1);
+	return (h_right + 1);
 }
 
 /**
- * full - check if a binary tree is full.
- *
- * @tree: pointer to the root node
- *
- * Return: 1 if full, 0 if not.
- */
-
-int full(const binary_tree_t *tree)
-{
-	if (!tree)
-		return (0);
-	if (!tree->left && !tree->right)
-		return (1);
-	if (tree->left && tree->right)
-		return (full(tree->left) && full(tree->right));
-	if (tree->left && !tree->right)
-		return (0);
-	if (tree->right && !tree->left)
-		return (0);
-	return (0);
-}
-
-/**
- * binary_tree_is_perfect - check if a tree is perfect
- *
- * @tree: pointer to root node
- *
- * Return: 1 if perfect, 0 otherwise.
+ * binary_tree_is_perfect - check if a binary tree is perfect
+ * @tree: a pointer to the root node 
+ * Return: 1 when binary tree is perfect otherwise 0
  */
 
 int binary_tree_is_perfect(const binary_tree_t *tree)
 {
-	if (!tree)
+	if (tree == NULL)
 		return (0);
-	if (full(tree) && !balanced(tree))
-	{
-		binary_tree_is_perfect(tree->right);
-		binary_tree_is_perfect(tree->left);
+	/*Check the presence of children*/
+	if (tree->left == NULL && tree->right == NULL)
 		return (1);
+	if (tree->left == NULL || tree->right == NULL)
+		return (0);
+	if (binary_tree_height(tree->left) == binary_tree_height(tree->right))
+	{
+		if (binary_tree_is_perfect(tree->left) &&
+		binary_tree_is_perfect(tree->right))
+			return (1);
 	}
 	return (0);
 }
